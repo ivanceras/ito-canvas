@@ -53,7 +53,7 @@ impl<'a> IntoIterator for &'a Circle {
 impl Iterator for CircleIterator {
     type Item = (f32, f32);
 
-    fn next(&mut self) -> Option<Self::Item>{
+    fn next(&mut self) -> Option<Self::Item> {
         let point = self.points.get(self.current);
         self.current += 1;
         point.cloned()
@@ -67,7 +67,7 @@ impl<'a> Shape<'a> for Circle {
 }
 
 #[cfg(test)]
-mod tests{
+mod tests {
     use super::*;
     use crate::*;
 
@@ -84,18 +84,19 @@ mod tests{
         });
         let result = context.to_string();
         println!("{}", result);
-                    
 
-        let expected =   "                    \n      \
-                   ⣀⠤⠒⠒⠑⠒⠢⢄⡀     \n    \
-                 ⡠⠊        ⠈⠢⡀   \n   \
-                ⡜            ⠘⡄  \n  \
-               ⢸              ⢸  \n  \
-               ⢱              ⢰⠁ \n  \
-               ⠈⢆            ⢀⠎  \n   \
-                ⠈⠢⡀         ⡠⠊   \n     \
-                  ⠈⠒⠤⣀⣀⢀⣀⡠⠔⠊     \n          \
-                       ⠁         ";
-        assert_eq!(result, expected);
+        let expected = [
+            "                    ",
+            "      ⣀⠤⠒⠒⠑⠒⠢⢄⡀     ",
+            "    ⡠⠊        ⠈⠢⡀   ",
+            "   ⡜            ⠘⡄  ",
+            "  ⢸              ⢸  ",
+            "  ⢱              ⢰⠁ ",
+            "  ⠈⢆            ⢀⠎  ",
+            "   ⠈⠢⡀         ⡠⠊   ",
+            "     ⠈⠒⠤⣀⣀⢀⣀⡠⠔⠊     ",
+            "          ⠁         ",
+        ];
+        assert_eq!(result, expected.join("\n"));
     }
 }

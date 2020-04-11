@@ -143,17 +143,8 @@ mod tests {
             y2: height,
         });
         let result = context.to_string();
-        let expected = " ⡇\n \
-                         ⡇\n \
-                         ⡇\n \
-                         ⡇\n \
-                         ⡇\n \
-                         ⡇\n \
-                         ⡇\n \
-                         ⡇\n \
-                         ⡇\n \
-                         ⡇";
-        assert_eq!(result, expected);
+        let expected = [" ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇"];
+        assert_eq!(result, expected.join("\n"));
     }
 
     #[test]
@@ -169,24 +160,24 @@ mod tests {
             y2: height,
         });
         let result = context.to_string();
-        for ch in result.chars(){
+        for ch in result.chars() {
             println!("result ch: {} [{}]", ch.escape_unicode(), ch);
         }
 
-        let expected = "\
-            ⠑⢄                  \n  \
-              ⠑⢄                \n    \
-                ⠑⢄              \n      \
-                  ⠑⢄            \n        \
-                    ⠑⢄          \n          \
-                      ⠑⢄        \n            \
-                        ⠑⢄      \n              \
-                          ⠑⢄    \n                \
-                            ⠑⢄  \n                  \
-                              ⠑⢄";
+        let expected = [
+            "⠑⢄                  ",
+            "  ⠑⢄                ",
+            "    ⠑⢄              ",
+            "      ⠑⢄            ",
+            "        ⠑⢄          ",
+            "          ⠑⢄        ",
+            "            ⠑⢄      ",
+            "              ⠑⢄    ",
+            "                ⠑⢄  ",
+            "                  ⠑⢄",
+        ];
 
-        assert_eq!(result.chars().count(), expected.chars().count());
-        assert_eq!(result, expected);
+        assert_eq!(result, expected.join("\n"));
     }
 
     #[test]
@@ -203,18 +194,19 @@ mod tests {
         });
         let result = context.to_string();
         println!("{}", result);
-        let expected = "\
-            ⠐⢄                  \n  \
-              ⠑⢄                \n    \
-                ⠑⢄              \n      \
-                  ⠑⢄            \n        \
-                    ⠑⢄          \n          \
-                      ⠑⢄        \n            \
-                        ⠑⢄      \n              \
-                          ⠑⢄    \n                \
-                            ⠑⢄  \n                  \
-                              ⠑⢄";
-        assert_eq!(result, expected);
+        let expected = [
+            "⠐⢄                  ",
+            "  ⠑⢄                ",
+            "    ⠑⢄              ",
+            "      ⠑⢄            ",
+            "        ⠑⢄          ",
+            "          ⠑⢄        ",
+            "            ⠑⢄      ",
+            "              ⠑⢄    ",
+            "                ⠑⢄  ",
+            "                  ⠑⢄",
+        ];
+        assert_eq!(result, expected.join("\n"));
     }
 
     #[test]
@@ -232,19 +224,20 @@ mod tests {
         let result = context.to_string();
         println!("{}", result);
 
-        let expected = "                  \
-                          ⢀⠔\n                \
-                        ⢀⠔⠁ \n              \
-                      ⢀⠔⠁   \n            \
-                    ⢀⠔⠁     \n          \
-                  ⢀⠔⠁       \n        \
-                ⢀⠔⠁         \n      \
-              ⢀⠔⠁           \n    \
-            ⢀⠔⠁             \n  \
-          ⢀⠔⠁               \n\
-        ⢀⠔⠁                 ";
+        let expected = [
+            "                  ⢀⠔",
+            "                ⢀⠔⠁ ",
+            "              ⢀⠔⠁   ",
+            "            ⢀⠔⠁     ",
+            "          ⢀⠔⠁       ",
+            "        ⢀⠔⠁         ",
+            "      ⢀⠔⠁           ",
+            "    ⢀⠔⠁             ",
+            "  ⢀⠔⠁               ",
+            "⢀⠔⠁                 ",
+        ];
 
-        assert_eq!(result, expected);
+        assert_eq!(result, expected.join("\n"));
     }
 
     #[test]
@@ -254,25 +247,27 @@ mod tests {
         let mut context = Context::new(width as f32, height as f32);
 
         context.draw(&Line {
-            x1: width,
+            x1: width - 0.5,
             y1: 0.0,
             x2: 0.0,
             y2: height,
         });
         let result = context.to_string();
         println!("{}", result);
-        let expected = "                  \
-                          ⢀⠔\n                \
-                        ⢀⠔⠁ \n              \
-                      ⢀⠔⠁   \n            \
-                    ⢀⠔⠁     \n          \
-                  ⢀⠔⠁       \n        \
-                ⢀⠔⠁         \n      \
-              ⢀⠔⠁           \n    \
-            ⢀⠔⠁             \n  \
-          ⢀⠔⠁               \n\
-        ⢀⠔⠁                 ";
 
-        assert_eq!(result, expected);
+        let expected = [
+            "                 ⢀⠔⠁",
+            "               ⢀⠔⠁  ",
+            "             ⢀⠔⠁    ",
+            "           ⢀⠔⠁      ",
+            "         ⢀⠔⠁        ",
+            "        ⡠⠊          ",
+            "      ⡠⠊            ",
+            "    ⡠⠊              ",
+            "  ⡠⠊                ",
+            "⡠⠊                  ",
+        ];
+
+        assert_eq!(result, expected.join("\n"));
     }
 }
