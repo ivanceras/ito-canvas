@@ -75,33 +75,27 @@ mod tests{
     fn draw_circle4() {
         let width = 10.0;
         let height = 10.0;
-        let mut context = Context {
-            width: width as u16,
-            height: height as u16,
-            x_bounds: [0.0, width],
-            y_bounds: [0.0, height],
-            grid: Grid::new(width as usize, height as usize),
-        };
+        let mut context = Context::new(width, height);
 
         context.draw(&Circle {
             x: 5.0,
             y: 5.0,
             radius: 4.0,
         });
-        let result = context.grid.to_string(width as usize);
+        let result = context.to_string();
         println!("{}", result);
+                    
 
-        let expected =   "          \
-                          \n   \
-                   ⡠⠒⠓⢦⡀  \n  \
-                  ⡜    ⠱⡀ \n \
-                 ⢸      ⢣ \n \
-                 ⡇      ⢸ \n \
-                 ⡇      ⢰⠁\n \
-                 ⢱      ⡸ \n \
-                 ⠈⢆    ⢠⠃ \n  \
-                  ⠈⠢⣀⣀⡴⠃  \n     \
-                     ⠁    ";
+        let expected =   "                    \n      \
+                   ⣀⠤⠒⠒⠑⠒⠢⢄⡀     \n    \
+                 ⡠⠊        ⠈⠢⡀   \n   \
+                ⡜            ⠘⡄  \n  \
+               ⢸              ⢸  \n  \
+               ⢱              ⢰⠁ \n  \
+               ⠈⢆            ⢀⠎  \n   \
+                ⠈⠢⡀         ⡠⠊   \n     \
+                  ⠈⠒⠤⣀⣀⢀⣀⡠⠔⠊     \n          \
+                       ⠁         ";
         assert_eq!(result, expected);
     }
 }

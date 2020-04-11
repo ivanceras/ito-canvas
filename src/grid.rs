@@ -28,9 +28,9 @@ impl Grid {
             }
             let ch = String::from_utf16(&[*cell]).unwrap();
             //println!("ch: {} [{}]", ch.chars().next().unwrap().escape_unicode(), ch);
-            if ch == "\u{2800}"{
+            if ch == "\u{2800}" {
                 buf.push(' ');
-            }else{
+            } else {
                 buf.push_str(&ch);
             }
         }
@@ -46,14 +46,29 @@ impl Grid {
 
 /// Holds the state of the Canvas when painting to it.
 pub struct Context {
-    pub width: u16,
-    pub height: u16,
-    pub x_bounds: [f32; 2],
-    pub y_bounds: [f32; 2],
-    pub grid: Grid,
+    width: u16,
+    height: u16,
+    x_bounds: [f32; 2],
+    y_bounds: [f32; 2],
+    grid: Grid,
 }
 
 impl Context {
+    pub fn new(width: f32, height: f32) -> Self {
+        let width = width * 2.0;
+        Context {
+            width : width as u16,
+            height: height as u16,
+            x_bounds: [0.0, width as f32],
+            y_bounds: [0.0, height as f32],
+            grid: Grid::new(width as usize, height as usize),
+        }
+    }
+
+    pub fn to_string(&self) -> String {
+        self.grid.to_string(self.width as usize)
+    }
+
     /// Draw any object that may implement the Shape trait
     pub fn draw<'b, S>(&mut self, shape: &'b S)
     where
@@ -66,14 +81,14 @@ impl Context {
         let mut n = 0;
         for (x, y) in shape
             .points()
-            .filter(|&(x, y)| x >= left && x < right && y >= top && y < bottom)
+            .map(|(x, y)| (2.0 * x, y))
+            .filter(|&(x, y)| x >= left && x < right * 2.0 && y >= top && y < bottom)
         {
             println!("n: {}", n);
             n += 1;
             let dy = ((top - y) * f32::from(self.height) * 4.0 / (top - bottom)) as usize;
             let dx = ((x - left) * f32::from(self.width) * 2.0 / (right - left)) as usize;
             let index = dy / 4 * self.width as usize + dx / 2;
-            dbg!(index);
             let dy_index = dy % 4;
             let dx_index = dx % 2;
             let braille = DOTS[dy_index][dx_index];
@@ -94,13 +109,7 @@ mod tests {
     fn draw_horizontal_lines() {
         let width = 10;
         let height = 1;
-        let mut context = Context {
-            width: width as u16,
-            height: height as u16,
-            x_bounds: [0.0, width as f32],
-            y_bounds: [0.0, height as f32],
-            grid: Grid::new(width, height),
-        };
+        let mut context = Context::new(width as f32, height as f32);
 
         context.draw(&Line {
             x1: 0.0,
@@ -123,6 +132,7 @@ mod tests {
             y_bounds: [0.0, height],
             grid: Grid::new(width as usize, height as usize),
         };
+        let mut context = Context::new(width as f32, height as f32);
 
         context.draw(&Line {
             x1: 0.5,
@@ -148,14 +158,8 @@ mod tests {
     fn draw_slash_lines() {
         let width = 10.0;
         let height = 10.0;
-        let mut context = Context {
-            width: width as u16,
-            height: height as u16,
-            x_bounds: [0.0, width],
-            y_bounds: [0.0, height],
-            grid: Grid::new(width as usize, height as usize),
-        };
 
+        let mut context = Context::new(width as f32, height as f32);
         context.draw(&Line {
             x1: 0.0,
             y1: 0.0,
@@ -182,13 +186,7 @@ mod tests {
     fn draw_slash_lines2() {
         let width = 10.0;
         let height = 10.0;
-        let mut context = Context {
-            width: width as u16,
-            height: height as u16,
-            x_bounds: [0.0, width],
-            y_bounds: [0.0, height],
-            grid: Grid::new(width as usize, height as usize),
-        };
+        let mut context = Context::new(width as f32, height as f32);
 
         context.draw(&Line {
             x1: width,
@@ -197,7 +195,7 @@ mod tests {
             y2: 0.0,
         });
         let result = context.grid.to_string(width as usize);
-        println!("{}",result);
+        println!("{}", result);
         let expected = "⢢         \n \
                          ⢣        \n  \
                           ⢣       \n   \
@@ -215,17 +213,11 @@ mod tests {
     fn draw_slant_lines() {
         let width = 10.0;
         let height = 10.0;
-        let mut context = Context {
-            width: width as u16,
-            height: height as u16,
-            x_bounds: [0.0, width],
-            y_bounds: [0.0, height],
-            grid: Grid::new(width as usize, height as usize),
-        };
+        let mut context = Context::new(width as f32, height as f32);
 
         context.draw(&Line {
             x1: 0.0,
-            y1: height, 
+            y1: height,
             x2: width,
             y2: 0.0,
         });
@@ -249,19 +241,13 @@ mod tests {
     fn draw_slant_lines2() {
         let width = 10.0;
         let height = 10.0;
-        let mut context = Context {
-            width: width as u16,
-            height: height as u16,
-            x_bounds: [0.0, width],
-            y_bounds: [0.0, height],
-            grid: Grid::new(width as usize, height as usize),
-        };
+        let mut context = Context::new(width as f32, height as f32);
 
         context.draw(&Line {
             x1: width,
             y1: 0.0,
             x2: 0.0,
-            y2: height, 
+            y2: height,
         });
         let result = context.grid.to_string(width as usize);
         println!("{}", result);
