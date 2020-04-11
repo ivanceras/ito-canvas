@@ -2,25 +2,25 @@ use crate::Shape;
 
 /// Shape to draw a line from (x1, y1) to (x2, y2) with the given color
 pub struct Line {
-    pub x1: f64,
-    pub y1: f64,
-    pub x2: f64,
-    pub y2: f64,
+    pub x1: f32,
+    pub y1: f32,
+    pub x2: f32,
+    pub y2: f32,
 }
 
 pub struct LineIterator {
-    x: f64,
-    y: f64,
-    dx: f64,
-    dy: f64,
-    dir_x: f64,
-    dir_y: f64,
-    current: f64,
-    end: f64,
+    x: f32,
+    y: f32,
+    dx: f32,
+    dy: f32,
+    dir_x: f32,
+    dir_y: f32,
+    current: f32,
+    end: f32,
 }
 
 impl Iterator for LineIterator {
-    type Item = (f64, f64);
+    type Item = (f32, f32);
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.current < self.end {
@@ -38,7 +38,7 @@ impl Iterator for LineIterator {
 }
 
 impl<'a> IntoIterator for &'a Line {
-    type Item = (f64, f64);
+    type Item = (f32, f32);
     type IntoIter = LineIterator;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -61,7 +61,7 @@ impl<'a> IntoIterator for &'a Line {
 }
 
 impl<'a> Shape<'a> for Line {
-    fn points(&'a self) -> Box<dyn Iterator<Item = (f64, f64)> + 'a> {
+    fn points(&'a self) -> Box<dyn Iterator<Item = (f32, f32)> + 'a> {
         Box::new(self.into_iter())
     }
 }
