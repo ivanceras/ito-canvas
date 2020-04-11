@@ -31,7 +31,6 @@ impl Grid {
                 buf.push('\n');
             }
             let ch = String::from_utf16(&[*cell]).unwrap();
-            println!("ch: {} [{}]", ch.chars().next().unwrap().escape_unicode(), ch);
             if ch == "\u{2800}" {
                 buf.push(' ');
             } else {

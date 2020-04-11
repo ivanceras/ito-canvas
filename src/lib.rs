@@ -1,5 +1,7 @@
 pub use grid::Grid;
 pub use grid::Context;
+pub use circle::Circle;
+pub use line::Line;
 
 mod grid;
 mod line;
