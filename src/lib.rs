@@ -2,10 +2,12 @@ pub use grid::Grid;
 pub use grid::Context;
 pub use circle::Circle;
 pub use line::Line;
+pub use arc::Arc;
 
 mod grid;
 mod line;
 mod circle;
+mod arc;
 
 pub trait Shape<'a> {
     /// Returns an iterator over all points of the shape
