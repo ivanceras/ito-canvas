@@ -10,24 +10,28 @@ pub const BRAILLE_OFFSET: u16 = 0x2800;
 pub const BRAILLE_BLANK: char = ' ';
 
 pub struct Grid {
+    width: usize,
+    height: usize,
     cells: Vec<u16>,
 }
 
 impl Grid {
     pub fn new(width: usize, height: usize) -> Grid {
         Grid {
+            width,
+            height,
             cells: vec![BRAILLE_OFFSET; width * height],
         }
     }
 
-    pub fn to_string(&self, width: usize) -> String {
+    pub fn to_string(&self) -> String {
         let mut buf = String::new();
         for (i, cell) in self.cells.iter().enumerate() {
-            if i != 0 && i % width == 0 {
+            if i != 0 && i % self.width == 0 {
                 buf.push('\n');
             }
             let ch = String::from_utf16(&[*cell]).unwrap();
-            //println!("ch: {} [{}]", ch.chars().next().unwrap().escape_unicode(), ch);
+            println!("ch: {} [{}]", ch.chars().next().unwrap().escape_unicode(), ch);
             if ch == "\u{2800}" {
                 buf.push(' ');
             } else {
@@ -57,7 +61,7 @@ impl Context {
     pub fn new(width: f32, height: f32) -> Self {
         let width = width * 2.0;
         Context {
-            width : width as u16,
+            width: width as u16,
             height: height as u16,
             x_bounds: [0.0, width as f32],
             y_bounds: [0.0, height as f32],
@@ -66,7 +70,7 @@ impl Context {
     }
 
     pub fn to_string(&self) -> String {
-        self.grid.to_string(self.width as usize)
+        self.grid.to_string()
     }
 
     /// Draw any object that may implement the Shape trait
@@ -84,7 +88,6 @@ impl Context {
             .map(|(x, y)| (2.0 * x, y))
             .filter(|&(x, y)| x >= left && x < right * 2.0 && y >= top && y < bottom)
         {
-            println!("n: {}", n);
             n += 1;
             let dy = ((top - y) * f32::from(self.height) * 4.0 / (top - bottom)) as usize;
             let dx = ((x - left) * f32::from(self.width) * 2.0 / (right - left)) as usize;
@@ -117,8 +120,8 @@ mod tests {
             x2: width as f32,
             y2: 0.5,
         });
-        let result = context.grid.to_string(width as usize);
-        assert_eq!(result, "⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤");
+        let result = context.to_string();
+        assert_eq!(result, "⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤");
     }
 
     #[test]
@@ -140,17 +143,17 @@ mod tests {
             x2: 0.5,
             y2: height,
         });
-        let result = context.grid.to_string(width as usize);
-        let expected = "⢸\n\
-                        ⢸\n\
-                        ⢸\n\
-                        ⢸\n\
-                        ⢸\n\
-                        ⢸\n\
-                        ⢸\n\
-                        ⢸\n\
-                        ⢸\n\
-                        ⢸";
+        let result = context.to_string();
+        let expected = " ⡇\n \
+                         ⡇\n \
+                         ⡇\n \
+                         ⡇\n \
+                         ⡇\n \
+                         ⡇\n \
+                         ⡇\n \
+                         ⡇\n \
+                         ⡇\n \
+                         ⡇";
         assert_eq!(result, expected);
     }
 
@@ -166,19 +169,24 @@ mod tests {
             x2: width,
             y2: height,
         });
-        let result = context.grid.to_string(width as usize);
+        let result = context.to_string();
+        for ch in result.chars(){
+            println!("result ch: {} [{}]", ch.escape_unicode(), ch);
+        }
 
-        let expected = "⢣         \n \
-                         ⢣        \n  \
-                          ⢣       \n   \
-                           ⢣      \n    \
-                            ⢣     \n     \
-                             ⢣    \n      \
-                              ⢣   \n       \
-                               ⢣  \n        \
-                                ⢣ \n         \
-                                 ⢣";
+        let expected = "\
+            ⠑⢄                  \n  \
+              ⠑⢄                \n    \
+                ⠑⢄              \n      \
+                  ⠑⢄            \n        \
+                    ⠑⢄          \n          \
+                      ⠑⢄        \n            \
+                        ⠑⢄      \n              \
+                          ⠑⢄    \n                \
+                            ⠑⢄  \n                  \
+                              ⠑⢄";
 
+        assert_eq!(result.chars().count(), expected.chars().count());
         assert_eq!(result, expected);
     }
 
@@ -194,23 +202,24 @@ mod tests {
             x2: 0.0,
             y2: 0.0,
         });
-        let result = context.grid.to_string(width as usize);
+        let result = context.to_string();
         println!("{}", result);
-        let expected = "⢢         \n \
-                         ⢣        \n  \
-                          ⢣       \n   \
-                           ⢣      \n    \
-                            ⢣     \n     \
-                             ⢣    \n      \
-                              ⢣   \n       \
-                               ⢣  \n        \
-                                ⢣ \n         \
-                                 ⢣";
+        let expected = "\
+            ⠐⢄                  \n  \
+              ⠑⢄                \n    \
+                ⠑⢄              \n      \
+                  ⠑⢄            \n        \
+                    ⠑⢄          \n          \
+                      ⠑⢄        \n            \
+                        ⠑⢄      \n              \
+                          ⠑⢄    \n                \
+                            ⠑⢄  \n                  \
+                              ⠑⢄";
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn draw_slant_lines() {
+    fn draw_slant_lines1() {
         let width = 10.0;
         let height = 10.0;
         let mut context = Context::new(width as f32, height as f32);
@@ -221,19 +230,21 @@ mod tests {
             x2: width,
             y2: 0.0,
         });
-        let result = context.grid.to_string(width as usize);
+        let result = context.to_string();
         println!("{}", result);
 
-        let expected = "         ⡰\n        \
-                                ⡰⠁\n       \
-                               ⡰⠁ \n      \
-                              ⡰⠁  \n     \
-                             ⡰⠁   \n    \
-                            ⡰⠁    \n   \
-                           ⡰⠁     \n  \
-                          ⡰⠁      \n \
-                         ⡰⠁       \n\
-                        ⡰⠁        ";
+        let expected = "                  \
+                          ⢀⠔\n                \
+                        ⢀⠔⠁ \n              \
+                      ⢀⠔⠁   \n            \
+                    ⢀⠔⠁     \n          \
+                  ⢀⠔⠁       \n        \
+                ⢀⠔⠁         \n      \
+              ⢀⠔⠁           \n    \
+            ⢀⠔⠁             \n  \
+          ⢀⠔⠁               \n\
+        ⢀⠔⠁                 ";
+
         assert_eq!(result, expected);
     }
 
@@ -249,19 +260,20 @@ mod tests {
             x2: 0.0,
             y2: height,
         });
-        let result = context.grid.to_string(width as usize);
+        let result = context.to_string();
         println!("{}", result);
+        let expected = "                  \
+                          ⢀⠔\n                \
+                        ⢀⠔⠁ \n              \
+                      ⢀⠔⠁   \n            \
+                    ⢀⠔⠁     \n          \
+                  ⢀⠔⠁       \n        \
+                ⢀⠔⠁         \n      \
+              ⢀⠔⠁           \n    \
+            ⢀⠔⠁             \n  \
+          ⢀⠔⠁               \n\
+        ⢀⠔⠁                 ";
 
-        let expected = "         ⡰\n        \
-                                ⡰⠁\n       \
-                               ⡰⠁ \n      \
-                              ⡰⠁  \n     \
-                             ⡰⠁   \n    \
-                            ⡰⠁    \n   \
-                           ⡰⠁     \n  \
-                          ⡰⠁      \n \
-                         ⡰⠁       \n\
-                        ⡰⠁        ";
         assert_eq!(result, expected);
     }
 }
