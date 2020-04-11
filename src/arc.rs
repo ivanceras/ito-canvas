@@ -36,11 +36,12 @@ impl Arc {
         let (cx, cy) = self.center();
         let o1 = Self::line_octant(cx, cy, self.x1, self.y1);
         let o2 = Self::line_octant(cx, cy, self.x2, self.y2);
-        (o1, o2)
+        (o1 + 1, o2)
     }
 
     // calculate the octant of a line
     fn line_octant(x1: f32, y1: f32, x2: f32, y2: f32) -> u8 {
+        println!("{},{} -> {},{}", x1, y1, x2, y2);
         let mut dx = x2 - x1;
         let mut dy = -(y2 * 2.0 - y1 * 2.0);
 
@@ -62,6 +63,7 @@ impl Arc {
         if dx < dy {
             octant += 1
         }
+        dbg!(octant);
         octant
     }
 }
@@ -90,8 +92,6 @@ impl<'a> IntoIterator for &'a Arc {
         let (o1, o2) = self.octant();
         dbg!(o1);
         dbg!(o2);
-
-        let octant = 7;
 
         while (x >= y) {
             if (o1..=o2).contains(&7) {
@@ -186,8 +186,8 @@ mod tests {
 
     #[test]
     fn draw_arc() {
-        let width = 40.0;
-        let height = 40.0;
+        let width = 11.0;
+        let height = 11.0;
         let mut context = Context::new(width, height);
         let arc = Arc {
             x1: 0.0,
@@ -205,6 +205,69 @@ mod tests {
 
         let result = context.to_string();
         println!("{}", result);
-        panic!();
+        let expected = [
+            "⢱                     ",
+            "⢸                     ",
+            " ⡇                    ",
+            " ⠸⡀                   ",
+            "  ⠱⡀                  ",
+            "   ⠑⡄                 ",
+            "    ⠈⠢⡀               ",
+            "      ⠈⠢⡀             ",
+            "        ⠈⠑⠤⣀          ",
+            "            ⠉⠒⠢⠤⢄⣀⣀⣀  ",
+            "                    ⠁ ",
+        ];
+        let expected = expected.join("\n");
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn draw_arc2() {
+        let width = 22.0;
+        let height = 22.0;
+        let mut context = Context::new(width, height);
+        let arc = Arc {
+            x1: 10.0,
+            y1: 0.0,
+            x2: 10.0,
+            y2: 20.0,
+            radius: 10.0,
+            sweep_flag: false,
+        };
+
+        context.draw(&arc);
+
+        let center = arc.center();
+        dbg!(center);
+
+        let result = context.to_string();
+        println!("{}", result);
+        let expected = [
+            "             ⣀⡠⠤⠔⠒⠒⠒⠁                       ",
+            "         ⢀⠤⠒⠉                               ",
+            "       ⡠⠊⠁                                  ",
+            "     ⡠⠊                                     ",
+            "   ⢀⠎                                       ",
+            "  ⢠⠃                                        ",
+            " ⢠⠃                                         ",
+            " ⡎                                          ",
+            "⢰⠁                                          ",
+            "⢸                                           ",
+            "⢱                                           ",
+            "⢸                                           ",
+            " ⡇                                          ",
+            " ⠸⡀                                         ",
+            "  ⠱⡀                                        ",
+            "   ⠑⡄                                       ",
+            "    ⠈⠢⡀                                     ",
+            "      ⠈⠢⡀                                   ",
+            "        ⠈⠑⠤⣀                                ",
+            "            ⠉⠒⠢⠤⢄⣀⣀⣀                        ",
+            "                    ⠁                       ",
+            "                                            ",
+        ];
+        let expected = expected.join("\n");
+        assert_eq!(result, expected);
     }
 }
