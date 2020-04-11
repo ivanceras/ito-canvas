@@ -21,7 +21,7 @@ struct Grid {
 impl Grid {
     fn new(width: usize, height: usize) -> Grid {
         Grid {
-            cells: vec![BRAILLE_OFFSET; width * height - 1],
+            cells: vec![BRAILLE_OFFSET; width * height],
         }
     }
 
@@ -32,7 +32,7 @@ impl Grid {
                 buf.push('\n');
             }
             let ch = String::from_utf16(&[*cell]).unwrap();
-            println!("ch: {} [{}]", ch.chars().next().unwrap().escape_unicode(), ch);
+            //println!("ch: {} [{}]", ch.chars().next().unwrap().escape_unicode(), ch);
             if ch == "\u{2800}"{
                 buf.push(' ');
             }else{
@@ -71,27 +71,21 @@ impl Context {
         let mut n = 0;
         for (x, y) in shape
             .points()
-            .filter(|&(x, y)| x >= left && x <= right && y >= top && y <= bottom)
+            .filter(|&(x, y)| x >= left && x < right && y >= top && y < bottom)
         {
             println!("n: {}", n);
             n += 1;
-            let dy = ((top - y) * f64::from(self.height - 1) * 4.0 / (top - bottom)) as usize;
-            let dx = ((x - left) * f64::from(self.width - 1) * 2.0 / (right - left)) as usize;
+            let dy = ((top - y) * f64::from(self.height) * 4.0 / (top - bottom)) as usize;
+            let dx = ((x - left) * f64::from(self.width) * 2.0 / (right - left)) as usize;
             let index = dy / 4 * self.width as usize + dx / 2;
+            dbg!(index);
             let dy_index = dy % 4;
             let dx_index = dx % 2;
-            dbg!(dy_index);
-            dbg!(dx_index);
             let braille = DOTS[dy_index][dx_index];
-            dbg!(braille);
             let existing = self.grid.cells[index];
-            dbg!(existing);
             let new_braille = existing | braille;
             let ch = String::from_utf16(&[new_braille]).unwrap();
-            dbg!(ch);
-            dbg!(new_braille);
             self.grid.cells[index] = new_braille;
-            println!();
         }
     }
 }
@@ -120,7 +114,7 @@ mod tests {
             y2: 0.5,
         });
         let result = context.grid.to_string(width as usize);
-        assert_eq!(result, "⠉⠉⠉⠉⠉⠉⠉⠉⠉");
+        assert_eq!(result, "⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤");
     }
 
     #[test]
@@ -142,21 +136,21 @@ mod tests {
             y2: height,
         });
         let result = context.grid.to_string(width as usize);
-        println!("{}", result);
-        let expected = "⡇\n\
-                        ⡇\n\
-                        ⡇\n\
-                        ⡇\n\
-                        ⡇\n\
-                        ⡇\n\
-                        ⡇\n\
-                        ⡇\n\
-                        ⡇";
+        let expected = "⢸\n\
+                        ⢸\n\
+                        ⢸\n\
+                        ⢸\n\
+                        ⢸\n\
+                        ⢸\n\
+                        ⢸\n\
+                        ⢸\n\
+                        ⢸\n\
+                        ⢸";
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn draw_slanted_lines() {
+    fn draw_slash_lines() {
         let width = 10.0;
         let height = 10.0;
         let mut context = Context {
@@ -168,28 +162,125 @@ mod tests {
         };
 
         context.draw(&Line {
-            x1: 0.5,
+            x1: 0.0,
             y1: 0.0,
             x2: width,
             y2: height,
         });
         let result = context.grid.to_string(width as usize);
+
+        let expected = "⢣         \n \
+                         ⢣        \n  \
+                          ⢣       \n   \
+                           ⢣      \n    \
+                            ⢣     \n     \
+                             ⢣    \n      \
+                              ⢣   \n       \
+                               ⢣  \n        \
+                                ⢣ \n         \
+                                 ⢣";
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn draw_slash_lines2() {
+        let width = 10.0;
+        let height = 10.0;
+        let mut context = Context {
+            width: width as u16,
+            height: height as u16,
+            x_bounds: [0.0, width],
+            y_bounds: [0.0, height],
+            grid: Grid::new(width as usize, height as usize),
+        };
+
+        context.draw(&Line {
+            x1: width,
+            y1: height,
+            x2: 0.0,
+            y2: 0.0,
+        });
+        let result = context.grid.to_string(width as usize);
+        println!("{}",result);
+        let expected = "⢢         \n \
+                         ⢣        \n  \
+                          ⢣       \n   \
+                           ⢣      \n    \
+                            ⢣     \n     \
+                             ⢣    \n      \
+                              ⢣   \n       \
+                               ⢣  \n        \
+                                ⢣ \n         \
+                                 ⢣";
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn draw_slant_lines() {
+        let width = 10.0;
+        let height = 10.0;
+        let mut context = Context {
+            width: width as u16,
+            height: height as u16,
+            x_bounds: [0.0, width],
+            y_bounds: [0.0, height],
+            grid: Grid::new(width as usize, height as usize),
+        };
+
+        context.draw(&Line {
+            x1: 0.0,
+            y1: height, 
+            x2: width,
+            y2: 0.0,
+        });
+        let result = context.grid.to_string(width as usize);
         println!("{}", result);
-        for ch in result.chars(){
-            println!("ch: [{}] {}",ch, ch.escape_unicode());
-        }
 
+        let expected = "         ⡰\n        \
+                                ⡰⠁\n       \
+                               ⡰⠁ \n      \
+                              ⡰⠁  \n     \
+                             ⡰⠁   \n    \
+                            ⡰⠁    \n   \
+                           ⡰⠁     \n  \
+                          ⡰⠁      \n \
+                         ⡰⠁       \n\
+                        ⡰⠁        ";
+        assert_eq!(result, expected);
+    }
 
-        let expected = "⠙⡄        \n \
-                         ⠸⡀       \n  \
-                          ⠑⡄      \n   \
-                           ⠱⡀     \n    \
-                            ⠱⡀    \n     \
-                             ⠱⡀   \n      \
-                              ⢣⡀  \n       \
-                               ⢱  \n        \
-                                ⢣ \n         ";
-        assert_eq!(result.chars().count(), expected.chars().count());
+    #[test]
+    fn draw_slant_lines2() {
+        let width = 10.0;
+        let height = 10.0;
+        let mut context = Context {
+            width: width as u16,
+            height: height as u16,
+            x_bounds: [0.0, width],
+            y_bounds: [0.0, height],
+            grid: Grid::new(width as usize, height as usize),
+        };
+
+        context.draw(&Line {
+            x1: width,
+            y1: 0.0,
+            x2: 0.0,
+            y2: height, 
+        });
+        let result = context.grid.to_string(width as usize);
+        println!("{}", result);
+
+        let expected = "         ⡰\n        \
+                                ⡰⠁\n       \
+                               ⡰⠁ \n      \
+                              ⡰⠁  \n     \
+                             ⡰⠁   \n    \
+                            ⡰⠁    \n   \
+                           ⡰⠁     \n  \
+                          ⡰⠁      \n \
+                         ⡰⠁       \n\
+                        ⡰⠁        ";
         assert_eq!(result, expected);
     }
 }
