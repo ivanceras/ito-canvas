@@ -10,6 +10,8 @@ pub struct Arc {
 }
 
 impl Arc {
+
+    /// calculate the center of this arc given start point, end point, radius and sweep direction
     fn center(&self) -> (f32, f32) {
         let q = ((self.x2 - self.x1).powf(2.0) + (self.y2 - self.y1).powf(2.0)).sqrt();
         dbg!(q);
@@ -32,6 +34,7 @@ impl Arc {
         }
     }
 
+    /// which octant range the arc lies
     fn octant(&self) -> (u8, u8) {
         let (cx, cy) = self.center();
         let o1 = Self::line_octant(cx, cy, self.x1, self.y1);
@@ -39,7 +42,7 @@ impl Arc {
         (o1 + 1, o2)
     }
 
-    // calculate the octant of a line
+    /// calculate the octant of a line
     fn line_octant(x1: f32, y1: f32, x2: f32, y2: f32) -> u8 {
         println!("{},{} -> {},{}", x1, y1, x2, y2);
         let mut dx = x2 - x1;

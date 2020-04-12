@@ -49,8 +49,8 @@ impl Grid {
 
 /// Holds the state of the Canvas when painting to it.
 pub struct Context {
-    width: u16,
-    height: u16,
+    width: f32,
+    height: f32,
     x_bounds: [f32; 2],
     y_bounds: [f32; 2],
     grid: Grid,
@@ -60,10 +60,10 @@ impl Context {
     pub fn new(width: f32, height: f32) -> Self {
         let width = width * 2.0;
         Context {
-            width: width as u16,
-            height: height as u16,
-            x_bounds: [0.0, width as f32],
-            y_bounds: [0.0, height as f32],
+            width,
+            height,
+            x_bounds: [0.0, width],
+            y_bounds: [0.0, height],
             grid: Grid::new(width as usize, height as usize),
         }
     }
@@ -79,25 +79,20 @@ impl Context {
     {
         let left = self.x_bounds[0];
         let right = self.x_bounds[1];
-        let bottom = self.y_bounds[1];
         let top = self.y_bounds[0];
-        let mut n = 0;
+        let bottom = self.y_bounds[1];
         for (x, y) in shape
             .points()
             .map(|(x, y)| (2.0 * x, y))
-            .filter(|&(x, y)| x >= left && x < right * 2.0 && y >= top && y < bottom)
+            .filter(|&(x, y)| x >= left && x < right && y >= top && y < bottom)
         {
-            n += 1;
-            let dy = ((top - y) * f32::from(self.height) * 4.0 / (top - bottom)) as usize;
-            let dx = ((x - left) * f32::from(self.width) * 2.0 / (right - left)) as usize;
+            let dy = ((top - y) * (self.height) * 4.0 / (top - bottom)) as usize;
+            let dx = ((x - left) * (self.width) * 2.0 / (right - left)) as usize;
             let index = dy / 4 * self.width as usize + dx / 2;
             let dy_index = dy % 4;
             let dx_index = dx % 2;
             let braille = DOTS[dy_index][dx_index];
-            let existing = self.grid.cells[index];
-            let new_braille = existing | braille;
-            let ch = String::from_utf16(&[new_braille]).unwrap();
-            self.grid.cells[index] = new_braille;
+            self.grid.cells[index] |= braille;
         }
     }
 }
@@ -128,8 +123,8 @@ mod tests {
         let width = 1.0;
         let height = 10.0;
         let mut context = Context {
-            width: width as u16,
-            height: height as u16,
+            width,
+            height,
             x_bounds: [0.0, width],
             y_bounds: [0.0, height],
             grid: Grid::new(width as usize, height as usize),
@@ -160,9 +155,6 @@ mod tests {
             y2: height,
         });
         let result = context.to_string();
-        for ch in result.chars() {
-            println!("result ch: {} [{}]", ch.escape_unicode(), ch);
-        }
 
         let expected = [
             "⠑⢄                  ",

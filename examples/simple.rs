@@ -1,7 +1,7 @@
-use txtcan::*;
+use astitik::*;
 
 fn main(){
-        let mut context = Context::new(100.0, 40.0);
+        let mut context = Context::new(40.0, 40.0);
 
         for i in 0..20{
             context.draw(&Circle {
@@ -37,12 +37,24 @@ fn main(){
             y2: 40.0,
         });
 
-        context.draw(&Line {
-            x1: 0.5,
-            y1: 0.0,
-            x2: 0.5,
-            y2: 40.0,
-        });
+        for i in 0..=10{
+            context.draw(&Line {
+                x1: 90.0,
+                y1: 0.0,
+                x2: i as f32 * 10.0,
+                y2: 40.0,
+            });
+        }
+
+        for i in 0..8{
+            context.draw(&Line {
+                x1: 90.0,
+                y1: 0.0,
+                x2: 0.0,
+                y2: i as f32 * 5.0,
+            });
+        }
+
         let result = context.to_string();
         println!("{}", result);
 }
