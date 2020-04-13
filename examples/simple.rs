@@ -1,4 +1,4 @@
-use astitik::*;
+use ito_canvas::*;
 
 fn main(){
         let mut context = Context::new(40.0, 40.0);
