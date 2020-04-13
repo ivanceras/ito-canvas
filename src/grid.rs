@@ -48,6 +48,7 @@ impl Grid {
 }
 
 /// Holds the state of the Canvas when painting to it.
+/// width of 1 cell text is 0.5 and height is 1.0
 pub struct Context {
     width: f32,
     height: f32,
@@ -101,6 +102,75 @@ impl Context {
 mod tests {
     use super::*;
     use crate::line::Line;
+
+    #[test]
+    fn draw_cell_horizontal_line() {
+        let mut context = Context::new(0.5, 1.0);
+
+        context.draw(&Line {
+            x1: 0.0,
+            y1: 0.5,
+            x2: 1.0,
+            y2: 0.5,
+        });
+        let result = context.to_string();
+        assert_eq!(result, "⠤");
+    }
+
+    #[test]
+    fn draw_cell_vertical_line() {
+        let mut context = Context::new(0.5, 1.0);
+
+        context.draw(&Line {
+            x1: 0.125,
+            y1: 0.0,
+            x2: 0.125,
+            y2: 1.0,
+        });
+        let result = context.to_string();
+        assert_eq!(result, "⡇");
+    }
+
+    #[test]
+    fn draw_cell_slant_line1() {
+        let mut context = Context::new(0.5, 1.0);
+
+        context.draw(&Line {
+            x1: 0.0,
+            y1: 0.0,
+            x2: 0.5,
+            y2: 1.0,
+        });
+        let result = context.to_string();
+        assert_eq!(result, "⢣");
+    }
+    #[test]
+    fn draw_cell_slant_line2() {
+        let mut context = Context::new(0.5, 1.0);
+
+        context.draw(&Line {
+            x1: 0.0,
+            y1: 1.0,
+            x2: 0.5,
+            y2: 0.0,
+        });
+        let result = context.to_string();
+        assert_eq!(result, "⡰");
+    }
+
+    #[test]
+    fn draw_cell_slant_line3() {
+        let mut context = Context::new(0.5, 1.0);
+
+        context.draw(&Line {
+            x1: 0.0,
+            y1: 0.75,
+            x2: 0.5,
+            y2: 0.375,
+        });
+        let result = context.to_string();
+        assert_eq!(result, "⡠");
+    }
 
     #[test]
     fn draw_horizontal_lines() {

@@ -11,10 +11,20 @@ pub struct Arc {
 
 impl Arc {
 
+    pub fn new(x1: f32, y1: f32, x2: f32, y2: f32, radius: f32, sweep_flag: bool) -> Self {
+        Arc{
+            x1,
+            y1,
+            x2,
+            y2,
+            radius,
+            sweep_flag,
+        }
+    }
+
     /// calculate the center of this arc given start point, end point, radius and sweep direction
-    fn center(&self) -> (f32, f32) {
+    pub fn center(&self) -> (f32, f32) {
         let q = ((self.x2 - self.x1).powf(2.0) + (self.y2 - self.y1).powf(2.0)).sqrt();
-        dbg!(q);
         let y3 = (self.y1 + self.y2) / 2.0;
         let x3 = (self.x1 + self.x2) / 2.0;
 
@@ -44,7 +54,6 @@ impl Arc {
 
     /// calculate the octant of a line
     fn line_octant(x1: f32, y1: f32, x2: f32, y2: f32) -> u8 {
-        println!("{},{} -> {},{}", x1, y1, x2, y2);
         let mut dx = x2 - x1;
         let mut dy = -(y2 * 2.0 - y1 * 2.0);
 
@@ -66,7 +75,6 @@ impl Arc {
         if dx < dy {
             octant += 1
         }
-        dbg!(octant);
         octant
     }
 }
@@ -93,8 +101,6 @@ impl<'a> IntoIterator for &'a Arc {
 
         let (cx, cy) = self.center();
         let (o1, o2) = self.octant();
-        dbg!(o1);
-        dbg!(o2);
 
         while (x >= y) {
             if (o1..=o2).contains(&7) {
@@ -204,7 +210,6 @@ mod tests {
         context.draw(&arc);
 
         let center = arc.center();
-        dbg!(center);
 
         let result = context.to_string();
         println!("{}", result);
@@ -242,7 +247,6 @@ mod tests {
         context.draw(&arc);
 
         let center = arc.center();
-        dbg!(center);
 
         let result = context.to_string();
         println!("{}", result);

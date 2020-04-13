@@ -6,6 +6,17 @@ pub struct Circle {
     pub radius: f32,
 }
 
+impl Circle {
+
+    pub fn new(x: f32, y: f32, radius: f32) -> Self {
+        Circle {
+            x,
+            y,
+            radius
+        }
+    }
+}
+
 // Note: This is not a lazy iterator
 // since we are computing multiple points at each iteration
 pub struct CircleIterator {
@@ -96,6 +107,44 @@ mod tests {
             "   ⠈⠢⡀         ⡠⠊   ",
             "     ⠈⠒⠤⣀⣀⢀⣀⡠⠔⠊     ",
             "          ⠁         ",
+        ];
+        assert_eq!(result, expected.join("\n"));
+    }
+
+    #[test]
+    fn draw_dynamic() {
+        let radius = 10.0;
+        let mut context = Context::new(radius * 2.0, radius * 2.0);
+
+        context.draw(&Circle {
+            x: radius,
+            y: radius,
+            radius,
+        });
+        let result = context.to_string();
+        println!("{}", result);
+
+        let expected = [
+            "             ⣀⡠⠤⠔⠒⠒⠒⠑⠒⠒⠒⠤⠤⣀⡀            ",
+            "         ⢀⠤⠒⠉              ⠈⠑⠢⢄         ",
+            "       ⡠⠊⠁                     ⠉⠢⡀      ",
+            "     ⡠⠊                          ⠈⠢⡀    ",
+            "   ⢀⠎                              ⠈⢆   ",
+            "  ⢠⠃                                 ⢣  ",
+            " ⢠⠃                                   ⢣ ",
+            " ⡎                                    ⠈⡆",
+            "⢰⠁                                     ⢱",
+            "⢸                                      ⢸",
+            "⢱                                      ⢰",
+            "⢸                                      ⢸",
+            " ⡇                                     ⡇",
+            " ⠸⡀                                   ⡸ ",
+            "  ⠱⡀                                 ⡰⠁ ",
+            "   ⠑⡄                               ⡔⠁  ",
+            "    ⠈⠢⡀                           ⡠⠊    ",
+            "      ⠈⠢⡀                       ⡠⠊      ",
+            "        ⠈⠑⠤⣀                ⢀⡠⠔⠉        ",
+            "            ⠉⠒⠢⠤⢄⣀⣀⣀⢀⣀⣀⣀⠤⠤⠒⠊⠁           ",
         ];
         assert_eq!(result, expected.join("\n"));
     }
