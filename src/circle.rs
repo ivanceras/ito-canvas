@@ -17,18 +17,9 @@ impl Circle {
     }
 }
 
-// Note: This is not a lazy iterator
-// since we are computing multiple points at each iteration
-pub struct CircleIterator {
-    points: Vec<(f32, f32)>,
-    current: usize,
-}
 
-impl<'a> IntoIterator for &'a Circle {
-    type Item = (f32, f32);
-    type IntoIter = CircleIterator;
-
-    fn into_iter(self) -> Self::IntoIter {
+impl<'a> Shape<'a> for Circle {
+    fn points(&'a self) -> Box<dyn Iterator<Item = (f32, f32)> + 'a> {
         let mut x = self.radius;
         let mut y = 0.0;
         let mut err = 0.0;
@@ -57,23 +48,7 @@ impl<'a> IntoIterator for &'a Circle {
                 err -= 2.0 * x + inc;
             }
         }
-        CircleIterator { points, current: 0 }
-    }
-}
-
-impl Iterator for CircleIterator {
-    type Item = (f32, f32);
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let point = self.points.get(self.current);
-        self.current += 1;
-        point.cloned()
-    }
-}
-
-impl<'a> Shape<'a> for Circle {
-    fn points(&'a self) -> Box<dyn Iterator<Item = (f32, f32)> + 'a> {
-        Box::new(self.into_iter())
+        Box::new(points.into_iter())
     }
 }
 

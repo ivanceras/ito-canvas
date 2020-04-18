@@ -1,3 +1,5 @@
+//! Ito-canvas is a drawing canvas using braille to display the drawing in the terminal
+//!
 pub use grid::Grid;
 pub use grid::Context;
 pub use circle::Circle;
