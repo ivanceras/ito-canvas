@@ -65,8 +65,8 @@ impl Grid {
 pub struct Context {
     width: f32,
     height: f32,
-    x_bounds: [f32; 2],
-    y_bounds: [f32; 2],
+    x_bounds: (f32, f32),
+    y_bounds: (f32, f32),
     grid: Grid,
 }
 
@@ -76,8 +76,8 @@ impl Context {
         Context {
             width,
             height,
-            x_bounds: [0.0, width],
-            y_bounds: [0.0, height],
+            x_bounds: (0.0, width),
+            y_bounds: (0.0, height),
             grid: Grid::new(width as usize, height as usize),
         }
     }
@@ -91,10 +91,8 @@ impl Context {
     where
         S: Shape<'b>,
     {
-        let left = self.x_bounds[0];
-        let right = self.x_bounds[1];
-        let top = self.y_bounds[0];
-        let bottom = self.y_bounds[1];
+        let (left,right) = self.x_bounds;
+        let (top,bottom) = self.y_bounds;
         for (x, y) in shape
             .points()
             .map(|(x, y)| (2.0 * x, y))

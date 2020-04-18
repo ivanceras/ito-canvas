@@ -3,13 +3,15 @@ use ito_canvas::*;
 fn main(){
         let mut context = Context::new(40.0, 40.0);
 
-        for i in 0..20{
+        for i in 15..20{
             context.draw(&Circle {
                 x: 20.0,
                 y: 20.0,
                 radius: i as f32 + 1.0,
             });
         }
+
+        context.draw(&Arc::new(10.0, 10.0, 20.0, 10.0, 10.0, false));
 
         context.draw(&Circle {
             x: 40.0,
