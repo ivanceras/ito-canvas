@@ -7,16 +7,10 @@ pub struct Circle {
 }
 
 impl Circle {
-
     pub fn new(x: f32, y: f32, radius: f32) -> Self {
-        Circle {
-            x,
-            y,
-            radius
-        }
+        Circle { x, y, radius }
     }
 }
-
 
 impl<'a> Shape<'a> for Circle {
     fn points(&'a self) -> Box<dyn Iterator<Item = (f32, f32)> + 'a> {

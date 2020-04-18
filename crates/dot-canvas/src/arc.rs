@@ -10,9 +10,8 @@ pub struct Arc {
 }
 
 impl Arc {
-
     pub fn new(x1: f32, y1: f32, x2: f32, y2: f32, radius: f32, sweep_flag: bool) -> Self {
-        Arc{
+        Arc {
             x1,
             y1,
             x2,

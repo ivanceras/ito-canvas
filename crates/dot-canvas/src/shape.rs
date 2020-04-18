@@ -1,4 +1,3 @@
-
 pub trait Shape<'a> {
     /// Returns an iterator over all points of the shape
     fn points(&'a self) -> Box<dyn Iterator<Item = (f32, f32)> + 'a>;
@@ -14,4 +13,3 @@ impl<'a> Shape<'a> for Dot {
         Box::new(std::iter::once((self.x, self.y)))
     }
 }
-

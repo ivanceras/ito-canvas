@@ -7,3 +7,11 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dot-canvas = { path = "crates/dot-canvas" }
+unicode-canvas = { path = "crates/unicode-canvas" }
+
+[workspace]
+members = [
+"crates/dot-canvas",
+"crates/unicode-canvas",
+]
