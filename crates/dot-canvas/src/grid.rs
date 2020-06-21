@@ -4,13 +4,13 @@ use crate::Shape;
 ///      0 1 2 3 4           B C D          BRAILLE ⣿
 ///     0┌─┬─┬─┬─┐        A┌─┬─┬─┬─┐E       ┌       ┐
 ///     1├─┼─┼─┼─┤         │ │ │ │ │         ─▮───▮─
-///     2├─┼─┼─┼─┤        F├─G─H─I─┤J         │   │          
+///     2├─┼─┼─┼─┤        F├─G─H─I─┤J         │   │
 ///     3├─┼─┼─┼─┤         │ │ │ │ │         ─▮───▮─
-///     4├─┼─┼─┼─┤        K├─L─M─N─┤O         │   │    
+///     4├─┼─┼─┼─┤        K├─L─M─N─┤O         │   │
 ///     5├─┼─┼─┼─┤         │ │ │ │ │         ─▮───▮─
-///     6├─┼─┼─┼─┤        P├─Q─R─S─┤T         │   │     
+///     6├─┼─┼─┼─┤        P├─Q─R─S─┤T         │   │
 ///     7├─┼─┼─┼─┤         │ │ │ │ │         ─▮───▮─
-///     8└─┴─┴─┴─┘        U└─┴─┴─┴─┘Y       └       ┘  
+///     8└─┴─┴─┴─┘        U└─┴─┴─┴─┘Y       └       ┘
 /// ```                      V W X
 
 pub const DOTS: [[u16; 2]; 4] = [
@@ -206,8 +206,8 @@ mod tests {
         let mut context = Context {
             width,
             height,
-            x_bounds: [0.0, width],
-            y_bounds: [0.0, height],
+            x_bounds: (0.0, width),
+            y_bounds: (0.0, height),
             grid: Grid::new(width as usize, height as usize),
         };
         let mut context = Context::new(width as f32, height as f32);
