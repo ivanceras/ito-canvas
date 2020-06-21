@@ -46,10 +46,10 @@ pub(crate) fn unicode_map() -> Vec<(char, Vec<Fragment>)> {
         ('┼', vec![line(k, m), line(m, o), line(c, m), line(m, w)]),
         // curves
         ('╭', vec![arc(o, w)]),
-        ('╮', vec![line(k, w)]),
+        ('╮', vec![arc(w, k)]),
         //
-        ('╰', vec![line(c, o)]),
-        ('╯', vec![line(c, k)]),
+        ('╰', vec![arc(c, o)]),
+        ('╯', vec![arc(k, c)]),
         // thick lines
         ('╸', vec![thick(k, m)]),
         ('╹', vec![thick(c, m)]),

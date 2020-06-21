@@ -1,3 +1,4 @@
+use crate::fragment::arc;
 use crate::fragment::line;
 use crate::fragment::thick;
 use crate::fragment::Cell;
@@ -111,6 +112,25 @@ impl Canvas {
 
         self.draw_vertical_line((x1, y1), (x1, y2), border.use_thick_border);
         self.draw_vertical_line((x2, y1), (x2, y2), border.use_thick_border);
+
+        if !border.use_thick_border {
+            let o = Cell::O;
+            let w = Cell::W;
+            let k = Cell::K;
+            let c = Cell::C;
+            if border.is_top_left_rounded {
+                self.cells.insert((x1, y1), vec![arc(o, w)]);
+            }
+            if border.is_top_right_rounded {
+                self.cells.insert((x2, y1), vec![arc(w, k)]);
+            }
+            if border.is_bottom_left_rounded {
+                self.cells.insert((x1, y2), vec![arc(c, o)]);
+            }
+            if border.is_bottom_right_rounded {
+                self.cells.insert((x2, y2), vec![arc(k, c)]);
+            }
+        }
     }
 
     fn resolve(fragments: &[Fragment]) -> Option<char> {
@@ -184,6 +204,54 @@ mod test {
             "┏━━━┓\n\
              ┃   ┃\n\
              ┗━━━┛",
+            canvas.dump()
+        );
+    }
+
+    #[test]
+    fn rect3() {
+        let mut canvas = Canvas::new();
+        canvas.draw_rect((0, 0), (6, 2), Border::rounded());
+        let mut cells = canvas
+            .cells
+            .iter()
+            .map(|((x, y), frag)| (x, y, frag))
+            .collect::<Vec<_>>();
+        cells.sort_by(|a, b| a.1.cmp(b.1).then(a.0.cmp(b.0)));
+        println!("cells: {:#?}", cells);
+        assert_eq!(cells.len(), 16);
+        let char_cells: Vec<(usize, usize, char)> = canvas.get_cells().collect();
+        println!("char cells: {:#?}", char_cells);
+        println!("dump: \n{}", canvas.dump());
+        assert_eq!(
+            "╭─────╮\n\
+             │     │\n\
+             ╰─────╯",
+            canvas.dump()
+        );
+    }
+
+    #[test]
+    fn crossing() {
+        let mut canvas = Canvas::new();
+
+        canvas.draw_rect((0, 0), (8, 4), Border::rounded());
+        canvas.draw_horizontal_line((0, 2), (8, 2), true);
+        canvas.draw_vertical_line((4, 0), (4, 4), false);
+        let mut cells = canvas
+            .cells
+            .iter()
+            .map(|((x, y), frag)| (x, y, frag))
+            .collect::<Vec<_>>();
+        cells.sort_by(|a, b| a.1.cmp(b.1).then(a.0.cmp(b.0)));
+        let char_cells: Vec<(usize, usize, char)> = canvas.get_cells().collect();
+        println!("dump: \n{}", canvas.dump());
+        assert_eq!(
+            "╭───┬───╮\n\
+             │   │   │\n\
+             ┝━━━┿━━━┥\n\
+             │   │   │\n\
+             ╰───┴───╯",
             canvas.dump()
         );
     }
