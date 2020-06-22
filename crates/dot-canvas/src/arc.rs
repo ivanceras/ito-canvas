@@ -10,7 +10,14 @@ pub struct Arc {
 }
 
 impl Arc {
-    pub fn new(x1: f32, y1: f32, x2: f32, y2: f32, radius: f32, sweep_flag: bool) -> Self {
+    pub fn new(
+        x1: f32,
+        y1: f32,
+        x2: f32,
+        y2: f32,
+        radius: f32,
+        sweep_flag: bool,
+    ) -> Self {
         Arc {
             x1,
             y1,
@@ -23,7 +30,8 @@ impl Arc {
 
     /// calculate the center of this arc given start point, end point, radius and sweep direction
     pub fn center(&self) -> (f32, f32) {
-        let q = ((self.x2 - self.x1).powf(2.0) + (self.y2 - self.y1).powf(2.0)).sqrt();
+        let q = ((self.x2 - self.x1).powf(2.0) + (self.y2 - self.y1).powf(2.0))
+            .sqrt();
         let y3 = (self.y1 + self.y2) / 2.0;
         let x3 = (self.x1 + self.x2) / 2.0;
 

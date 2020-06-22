@@ -59,7 +59,9 @@ impl Line {
 impl Fragment {
     pub(crate) fn same_line(&self, other: &Self) -> bool {
         match (self, other) {
-            (Fragment::Line(line), Fragment::Line(other)) => line.same_line(other),
+            (Fragment::Line(line), Fragment::Line(other)) => {
+                line.same_line(other)
+            }
             _ => false,
         }
     }

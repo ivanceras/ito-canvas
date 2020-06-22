@@ -1,5 +1,6 @@
 use crate::fragment::Cell;
 use crate::fragment::{arc, line, thick, Fragment};
+use lazy_static::lazy_static;
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
 
@@ -17,7 +18,8 @@ use std::iter::FromIterator;
 ///          W
 ///```
 
-pub(crate) fn unicode_map() -> Vec<(char, Vec<Fragment>)> {
+lazy_static! {
+    pub(crate) static ref UNICODE_MAP: Vec<(char, Vec<Fragment>)> = {
     let c = Cell::C;
     let k = Cell::K;
     let m = Cell::M;
@@ -152,13 +154,11 @@ pub(crate) fn unicode_map() -> Vec<(char, Vec<Fragment>)> {
         ('╾', vec![thick(k, m), line(m, o)]),
         ('╿', vec![thick(c, m), line(m, w)]),
     ]
-}
+    };
 
-// TODO: put this in lazy static
-pub(crate) fn fragment_char() -> BTreeMap<Vec<Fragment>, char> {
-    BTreeMap::from_iter(unicode_map().iter().map(|(ch, frag)| {
+    pub(crate) static ref FRAGMENT_CHAR: BTreeMap<Vec<Fragment>, char> = {BTreeMap::from_iter(UNICODE_MAP.iter().map(|(ch, frag)| {
         let mut frag = frag.clone();
         frag.sort();
         (frag, *ch)
-    }))
+    }))};
 }

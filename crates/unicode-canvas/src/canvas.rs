@@ -4,6 +4,7 @@ use crate::fragment::thick;
 use crate::fragment::Cell;
 use crate::fragment::Fragment;
 use crate::string_buffer::StringBuffer;
+use crate::unicode_map::FRAGMENT_CHAR;
 pub(crate) use border::Border;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
@@ -104,7 +105,12 @@ impl Canvas {
         }
     }
 
-    pub(crate) fn draw_rect(&mut self, start: (usize, usize), end: (usize, usize), border: Border) {
+    pub(crate) fn draw_rect(
+        &mut self,
+        start: (usize, usize),
+        end: (usize, usize),
+        border: Border,
+    ) {
         let (x1, y1) = start;
         let (x2, y2) = end;
         self.draw_horizontal_line((x1, y1), (x2, y1), border.use_thick_border);
@@ -137,18 +143,17 @@ impl Canvas {
         //TODO: put this in lazy static
         let mut fragments = fragments.to_owned();
         fragments.sort();
-        let fragment_char: BTreeMap<Vec<Fragment>, char> = crate::unicode_map::fragment_char();
-        fragment_char.get(&fragments).map(|c| *c)
+        FRAGMENT_CHAR.get(&fragments).map(|c| *c)
     }
 
-    pub(crate) fn get_cells<'a>(&'a self) -> Box<dyn Iterator<Item = (usize, usize, char)> + 'a> {
+    pub(crate) fn get_cells<'a>(
+        &'a self,
+    ) -> Box<dyn Iterator<Item = (usize, usize, char)> + 'a> {
         let mut cells = self.cells.iter().collect::<Vec<_>>();
         cells.sort_by(|a, b| a.0.cmp(&b.0).then(a.1.cmp(&b.1)));
-        Box::new(
-            cells
-                .into_iter()
-                .flat_map(|((x, y), frags)| Self::resolve(frags).map(|ch| (*x, *y, ch))),
-        )
+        Box::new(cells.into_iter().flat_map(|((x, y), frags)| {
+            Self::resolve(frags).map(|ch| (*x, *y, ch))
+        }))
     }
 
     pub(crate) fn dump(&self) -> String {
@@ -175,7 +180,8 @@ mod test {
         cells.sort_by(|a, b| a.1.cmp(b.1).then(a.0.cmp(b.0)));
         println!("cells: {:#?}", cells);
         assert_eq!(cells.len(), 8);
-        let char_cells: Vec<(usize, usize, char)> = canvas.get_cells().collect();
+        let char_cells: Vec<(usize, usize, char)> =
+            canvas.get_cells().collect();
         println!("char cells: {:#?}", char_cells);
         println!("dump: \n{}", canvas.dump());
         assert_eq!(
@@ -197,7 +203,8 @@ mod test {
         cells.sort_by(|a, b| a.1.cmp(b.1).then(a.0.cmp(b.0)));
         println!("cells: {:#?}", cells);
         assert_eq!(cells.len(), 12);
-        let char_cells: Vec<(usize, usize, char)> = canvas.get_cells().collect();
+        let char_cells: Vec<(usize, usize, char)> =
+            canvas.get_cells().collect();
         println!("char cells: {:#?}", char_cells);
         println!("dump: \n{}", canvas.dump());
         assert_eq!(
@@ -220,7 +227,8 @@ mod test {
         cells.sort_by(|a, b| a.1.cmp(b.1).then(a.0.cmp(b.0)));
         println!("cells: {:#?}", cells);
         assert_eq!(cells.len(), 16);
-        let char_cells: Vec<(usize, usize, char)> = canvas.get_cells().collect();
+        let char_cells: Vec<(usize, usize, char)> =
+            canvas.get_cells().collect();
         println!("char cells: {:#?}", char_cells);
         println!("dump: \n{}", canvas.dump());
         assert_eq!(
@@ -244,7 +252,8 @@ mod test {
             .map(|((x, y), frag)| (x, y, frag))
             .collect::<Vec<_>>();
         cells.sort_by(|a, b| a.1.cmp(b.1).then(a.0.cmp(b.0)));
-        let char_cells: Vec<(usize, usize, char)> = canvas.get_cells().collect();
+        let char_cells: Vec<(usize, usize, char)> =
+            canvas.get_cells().collect();
         println!("dump: \n{}", canvas.dump());
         assert_eq!(
             "╭───┬───╮\n\

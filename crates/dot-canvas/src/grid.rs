@@ -98,8 +98,10 @@ impl Context {
             .map(|(x, y)| (2.0 * x, y))
             .filter(|&(x, y)| x >= left && x < right && y >= top && y < bottom)
         {
-            let dy = ((top - y) * (self.height) * 4.0 / (top - bottom)) as usize;
-            let dx = ((x - left) * (self.width) * 2.0 / (right - left)) as usize;
+            let dy =
+                ((top - y) * (self.height) * 4.0 / (top - bottom)) as usize;
+            let dx =
+                ((x - left) * (self.width) * 2.0 / (right - left)) as usize;
             let index = dy / 4 * self.width as usize + dx / 2;
             let dy_index = dy % 4;
             let dx_index = dx % 2;
@@ -219,7 +221,8 @@ mod tests {
             y2: height,
         });
         let result = context.to_string();
-        let expected = [" ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇"];
+        let expected =
+            [" ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇", " ⡇"];
         assert_eq!(result, expected.join("\n"));
     }
 
