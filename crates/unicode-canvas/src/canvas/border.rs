@@ -1,19 +1,18 @@
-pub(crate) struct Border {
-    pub(crate) use_thick_border: bool,
+pub struct Border {
+    pub use_thick_border: bool,
+    pub has_top: bool,
+    pub has_bottom: bool,
+    pub has_left: bool,
+    pub has_right: bool,
 
-    pub(crate) has_top: bool,
-    pub(crate) has_bottom: bool,
-    pub(crate) has_left: bool,
-    pub(crate) has_right: bool,
-
-    pub(crate) is_top_left_rounded: bool,
-    pub(crate) is_top_right_rounded: bool,
-    pub(crate) is_bottom_left_rounded: bool,
-    pub(crate) is_bottom_right_rounded: bool,
+    pub is_top_left_rounded: bool,
+    pub is_top_right_rounded: bool,
+    pub is_bottom_left_rounded: bool,
+    pub is_bottom_right_rounded: bool,
 }
 
 impl Border {
-    pub(crate) fn thin() -> Self {
+    pub fn thin() -> Self {
         Border {
             use_thick_border: false,
             has_top: true,
@@ -27,7 +26,7 @@ impl Border {
         }
     }
 
-    pub(crate) fn thick() -> Self {
+    pub fn thick() -> Self {
         Border {
             use_thick_border: true,
             has_top: true,
@@ -41,7 +40,7 @@ impl Border {
         }
     }
 
-    pub(crate) fn rounded() -> Self {
+    pub fn rounded() -> Self {
         Border {
             use_thick_border: false,
             has_top: true,

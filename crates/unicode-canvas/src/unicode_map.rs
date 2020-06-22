@@ -4,19 +4,19 @@ use lazy_static::lazy_static;
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
 
-///```ignore
-///          C
-///          ╷
-///          │
-///          │
-///          │
-///     K╶───M───╴O
-///          │
-///          │
-///          │
-///          ╵
-///          W
-///```
+//```ignore
+//          C
+//          ╷
+//          │
+//          │
+//          │
+//     K╶───M───╴O
+//          │
+//          │
+//          │
+//          ╵
+//          W
+//```
 
 lazy_static! {
     pub(crate) static ref UNICODE_MAP: Vec<(char, Vec<Fragment>)> = {

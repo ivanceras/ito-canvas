@@ -6,24 +6,23 @@ use crate::fragment::Fragment;
 use crate::string_buffer::StringBuffer;
 use crate::unicode_map::FRAGMENT_CHAR;
 pub(crate) use border::Border;
-use std::collections::BTreeMap;
 use std::collections::HashMap;
 
 mod border;
 
 #[derive(Debug)]
-pub(crate) struct Canvas {
+pub struct Canvas {
     cells: HashMap<(usize, usize), Vec<Fragment>>,
 }
 
 impl Canvas {
-    pub(crate) fn new() -> Self {
+    pub fn new() -> Self {
         Canvas {
             cells: HashMap::new(),
         }
     }
 
-    pub(crate) fn draw_horizontal_line(
+    pub fn draw_horizontal_line(
         &mut self,
         start: (usize, usize),
         end: (usize, usize),
@@ -33,7 +32,7 @@ impl Canvas {
         let (x2, y2) = end;
         assert_eq!(y1, y2, "horizontal line must have the same y1 and y2");
         //swap the points if x1 is greater than x2
-        let (x1, x2) = if (x1 > x2) { (x2, x1) } else { (x1, x2) };
+        let (x1, x2) = if x1 > x2 { (x2, x1) } else { (x1, x2) };
         let k = Cell::K;
         let m = Cell::M;
         let o = Cell::O;
@@ -63,7 +62,7 @@ impl Canvas {
         }
     }
 
-    pub(crate) fn draw_vertical_line(
+    pub fn draw_vertical_line(
         &mut self,
         start: (usize, usize),
         end: (usize, usize),
@@ -73,7 +72,7 @@ impl Canvas {
         let (x2, y2) = end;
         assert_eq!(x1, x2, "veritcal line must have the same x1 and x2");
         //swap the points if y1 is greater than y2
-        let (y1, y2) = if (y1 > y2) { (y2, y1) } else { (y1, y2) };
+        let (y1, y2) = if y1 > y2 { (y2, y1) } else { (y1, y2) };
 
         let c = Cell::C;
         let m = Cell::M;
@@ -105,7 +104,7 @@ impl Canvas {
         }
     }
 
-    pub(crate) fn draw_rect(
+    pub fn draw_rect(
         &mut self,
         start: (usize, usize),
         end: (usize, usize),
@@ -146,7 +145,7 @@ impl Canvas {
         FRAGMENT_CHAR.get(&fragments).map(|c| *c)
     }
 
-    pub(crate) fn get_cells<'a>(
+    pub fn get_cells<'a>(
         &'a self,
     ) -> Box<dyn Iterator<Item = (usize, usize, char)> + 'a> {
         let mut cells = self.cells.iter().collect::<Vec<_>>();
@@ -156,7 +155,7 @@ impl Canvas {
         }))
     }
 
-    pub(crate) fn dump(&self) -> String {
+    pub fn dump(&self) -> String {
         let mut sb = StringBuffer::new();
         let cells = self.get_cells();
         cells.for_each(|(x, y, ch)| sb.add_char(x as i32, y as i32, ch));
