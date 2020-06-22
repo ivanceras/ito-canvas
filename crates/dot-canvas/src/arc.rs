@@ -99,7 +99,7 @@ impl<'a> Shape<'a> for Arc {
         let (cx, cy) = self.center();
         let (o1, o2) = self.octant();
 
-        while (x >= y) {
+        while x >= y {
             if (o1..=o2).contains(&7) {
                 points.push((cx + x, cy + y));
             }
@@ -125,12 +125,12 @@ impl<'a> Shape<'a> for Arc {
                 points.push((cx + x, cy - y));
             }
 
-            if (err <= 0.0) {
+            if err <= 0.0 {
                 y += inc;
                 err += 2.0 * y + inc;
             }
 
-            if (err > 0.0) {
+            if err > 0.0 {
                 x -= inc;
                 err -= 2.0 * x + inc;
             }
@@ -190,8 +190,6 @@ mod tests {
 
         context.draw(&arc);
 
-        let center = arc.center();
-
         let result = context.to_string();
         println!("{}", result);
         let expected = [
@@ -226,8 +224,6 @@ mod tests {
         };
 
         context.draw(&arc);
-
-        let center = arc.center();
 
         let result = context.to_string();
         println!("{}", result);

@@ -50,6 +50,7 @@ pub(crate) fn arc(start: Cell, end: Cell) -> Fragment {
 }
 
 impl Line {
+    #[allow(unused)]
     pub(crate) fn same_line(&self, other: &Self) -> bool {
         (self.start == other.start && self.end == other.end)
             || (self.end == other.start && self.start == other.end)
@@ -57,6 +58,7 @@ impl Line {
 }
 
 impl Fragment {
+    #[allow(unused)]
     pub(crate) fn same_line(&self, other: &Self) -> bool {
         match (self, other) {
             (Fragment::Line(line), Fragment::Line(other)) => {
@@ -73,16 +75,10 @@ mod test {
 
     #[test]
     fn test_same_line() {
-        let c = Cell::C;
         let k = Cell::K;
-        let m = Cell::M;
         let o = Cell::O;
-        let w = Cell::W;
         let ko = line(k, o);
         let ok = line(o, k);
-
-        let mo = line(m, o);
-        let km = line(k, m);
 
         assert!(ko.same_line(&ok));
         assert!(ok.same_line(&ko));

@@ -22,7 +22,7 @@ impl<'a> Shape<'a> for Circle {
 
         let mut points = vec![];
 
-        while (x >= y) {
+        while x >= y {
             points.push((self.x + x, self.y + y));
             points.push((self.x + y, self.y + x));
             points.push((self.x - y, self.y + x));
@@ -32,12 +32,12 @@ impl<'a> Shape<'a> for Circle {
             points.push((self.x + y, self.y - x));
             points.push((self.x + x, self.y - y));
 
-            if (err <= 0.0) {
+            if err <= 0.0 {
                 y += inc;
                 err += 2.0 * y + inc;
             }
 
-            if (err > 0.0) {
+            if err > 0.0 {
                 x -= inc;
                 err -= 2.0 * x + inc;
             }

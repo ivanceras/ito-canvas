@@ -251,8 +251,6 @@ mod test {
             .map(|((x, y), frag)| (x, y, frag))
             .collect::<Vec<_>>();
         cells.sort_by(|a, b| a.1.cmp(b.1).then(a.0.cmp(b.0)));
-        let char_cells: Vec<(usize, usize, char)> =
-            canvas.get_cells().collect();
         println!("dump: \n{}", canvas.dump());
         assert_eq!(
             "╭───┬───╮\n\

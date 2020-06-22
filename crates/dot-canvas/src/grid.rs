@@ -20,11 +20,9 @@ pub const DOTS: [[u16; 2]; 4] = [
     [0x0040, 0x0080],
 ];
 pub const BRAILLE_OFFSET: u16 = 0x2800;
-pub const BRAILLE_BLANK: char = ' ';
 
 pub struct Grid {
     width: usize,
-    height: usize,
     cells: Vec<u16>,
 }
 
@@ -32,7 +30,6 @@ impl Grid {
     pub fn new(width: usize, height: usize) -> Grid {
         Grid {
             width,
-            height,
             cells: vec![BRAILLE_OFFSET; width * height],
         }
     }
@@ -53,7 +50,7 @@ impl Grid {
         buf
     }
 
-    fn reset(&mut self) {
+    pub fn reset(&mut self) {
         for c in &mut self.cells {
             *c = BRAILLE_OFFSET;
         }
@@ -205,13 +202,6 @@ mod tests {
     fn draw_vertical_lines() {
         let width = 1.0;
         let height = 10.0;
-        let mut context = Context {
-            width,
-            height,
-            x_bounds: (0.0, width),
-            y_bounds: (0.0, height),
-            grid: Grid::new(width as usize, height as usize),
-        };
         let mut context = Context::new(width as f32, height as f32);
 
         context.draw(&Line {

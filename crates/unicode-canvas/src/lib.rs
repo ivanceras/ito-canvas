@@ -1,4 +1,4 @@
-#[deny(warnings)]
+#![deny(warnings)]
 mod canvas;
 mod fragment;
 mod string_buffer;
