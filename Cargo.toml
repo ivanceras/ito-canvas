@@ -10,8 +10,8 @@ documentation = "https://docs.rs/ito-canvas"
 keywords = ["text", "tui", "canvas", "widget"]
 
 [dependencies]
-dot-canvas = { path = "crates/dot-canvas" }
-unicode-canvas = { path = "crates/unicode-canvas" }
+dot-canvas = { version = "0.1.0", path = "crates/dot-canvas" }
+unicode-canvas = { version = 0.1.0", path = "crates/unicode-canvas" }
 
 [workspace]
 members = [
