@@ -5,7 +5,7 @@ use crate::fragment::Cell;
 use crate::fragment::Fragment;
 use crate::string_buffer::StringBuffer;
 use crate::unicode_map::FRAGMENT_CHAR;
-pub(crate) use border::Border;
+pub use border::Border;
 use std::collections::HashMap;
 
 mod border;
@@ -112,11 +112,35 @@ impl Canvas {
     ) {
         let (x1, y1) = start;
         let (x2, y2) = end;
-        self.draw_horizontal_line((x1, y1), (x2, y1), border.use_thick_border);
-        self.draw_horizontal_line((x1, y2), (x2, y2), border.use_thick_border);
+        if border.has_top {
+            self.draw_horizontal_line(
+                (x1, y1),
+                (x2, y1),
+                border.use_thick_border,
+            );
+        }
+        if border.has_bottom {
+            self.draw_horizontal_line(
+                (x1, y2),
+                (x2, y2),
+                border.use_thick_border,
+            );
+        }
 
-        self.draw_vertical_line((x1, y1), (x1, y2), border.use_thick_border);
-        self.draw_vertical_line((x2, y1), (x2, y2), border.use_thick_border);
+        if border.has_left {
+            self.draw_vertical_line(
+                (x1, y1),
+                (x1, y2),
+                border.use_thick_border,
+            );
+        }
+        if border.has_right {
+            self.draw_vertical_line(
+                (x2, y1),
+                (x2, y2),
+                border.use_thick_border,
+            );
+        }
 
         if !border.use_thick_border {
             let o = Cell::O;
@@ -138,10 +162,17 @@ impl Canvas {
         }
     }
 
+    pub fn draw_text(&mut self, start: (usize, usize), text: &str) {
+        let (x, y) = start;
+        for (i, ch) in text.chars().enumerate() {
+            self.cells.insert((x + i, y), vec![Fragment::Char(ch)]);
+        }
+    }
+
     fn resolve(fragments: &[Fragment]) -> Option<char> {
-        //TODO: put this in lazy static
         let mut fragments = fragments.to_owned();
         fragments.sort();
+        fragments.dedup();
         FRAGMENT_CHAR.get(&fragments).map(|c| *c)
     }
 

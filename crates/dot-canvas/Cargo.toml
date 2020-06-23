@@ -3,6 +3,12 @@ name = "dot-canvas"
 version = "0.1.0"
 authors = ["Jovansonlee Cesar <ivanceras@gmail.com>"]
 edition = "2018"
+license = "MIT"
+description = "A library for creating text base drawing"
+repository = "https://github.com/ivanceras/ito-canvas"
+documentation = "https://docs.rs/ito-canvas"
+readme = "README.md"
+keywords = ["text", "tui", "canvas", "widget"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

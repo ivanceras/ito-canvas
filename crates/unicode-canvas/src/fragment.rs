@@ -11,6 +11,7 @@ pub(crate) enum Cell {
 pub(crate) enum Fragment {
     Line(Line),
     Arc(Arc),
+    Char(char),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
