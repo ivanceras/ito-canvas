@@ -1,5 +1,4 @@
-#![deny(warnings)]
-pub use dot_canvas::{Arc, Circle, Context, Line};
-
+#![deny(warnings, missing_docs)]
+//! ito-canvas provides functionality to create text based drawings
 pub use dot_canvas;
 pub use unicode_canvas;

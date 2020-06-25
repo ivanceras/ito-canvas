@@ -1,4 +1,4 @@
-use ito_canvas::*;
+use ito_canvas::dot_canvas::*;
 
 fn main() {
     let mut context = Context::new(40.0, 40.0);
