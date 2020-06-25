@@ -15,6 +15,6 @@ unicode-canvas = { version = "0.1.0", path = "crates/unicode-canvas" }
 
 [workspace]
 members = [
-"crates/dot-canvas",
-"crates/unicode-canvas",
+    "crates/dot-canvas",
+    "crates/unicode-canvas",
 ]
