@@ -62,6 +62,39 @@ impl Canvas {
         }
     }
 
+    /// erase all lines that overlaps this line
+    pub fn eraser_horizontal_line(
+        &mut self,
+        start: (usize, usize),
+        end: (usize, usize),
+        use_thick: bool,
+    ) {
+        let (x1, y1) = start;
+        let (x2, y2) = end;
+        assert_eq!(y1, y2, "horizontal line must have the same y1 and y2");
+        //swap the points if x1 is greater than x2
+        let (x1, x2) = if x1 > x2 { (x2, x1) } else { (x1, x2) };
+        let k = Cell::K;
+        let m = Cell::M;
+        let o = Cell::O;
+        let mo = if use_thick { thick(m, o) } else { line(m, o) };
+        let km = if use_thick { thick(k, m) } else { line(k, m) };
+
+        let width = x2 - x1 + 1;
+        for i in 0..width {
+            if let Some(existing) = self.cells.get_mut(&(x1 + i, y1)) {
+                if i == 0 {
+                    existing.retain(|line| *line != mo);
+                } else if i == width - 1 {
+                    existing.retain(|line| *line != km);
+                } else {
+                    existing.retain(|line| *line != km);
+                    existing.retain(|line| *line != mo);
+                }
+            }
+        }
+    }
+
     pub fn draw_vertical_line(
         &mut self,
         start: (usize, usize),
